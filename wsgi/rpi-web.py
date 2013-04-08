@@ -8,8 +8,6 @@ import atexit
 import threading
 import logging
 from cherrypy import _cperror
-from resources import Resources
-from user_stats import UserStats
 
 logger = None
 
