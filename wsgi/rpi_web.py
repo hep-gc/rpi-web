@@ -9,27 +9,23 @@ import threading
 import logging
 from cherrypy import _cperror
 
+from services.cloudscheduler import CloudSchedulerService
+
 logger = None
 
 # CherryPy configuration.
 # This can be put in a config file.  We will do that later...
 conf = {}
-conf['global'] = {'environment': 'embedded', 'log.error_file':'/tmp/rpi-web-wsgi-error.log', 'log.access_file':'/tmp/rpi-web-wsgi-access.log', 'tools.sessions.name':'1'}
+conf['global'] = {'environment': 'embedded', 'log.error_file':'/tmp/rpi_web_wsgi_error.log', 'log.access_file':'/tmp/rpi_web_wsgi_access.log', 'tools.sessions.name':'1'}
 
-# The root CherryPy handler.
-# It does nothing more than act as a parent
-# for all handlers.
-class Root():
-    def test(self):
-        return 'Test OK'
 
 
 
 
 
 try:
-    root = Root()
-
+    cloudSchedulerService = CloudSchedulerService()
+    
 
     logging.debug('Creating request dispatching routes...')
     d = cherrypy.dispatch.RoutesDispatcher()
@@ -38,7 +34,12 @@ try:
 
     conf['/'] = {'request.dispatch': d}
 
-    d.connect('test', '/test', controller = root, action = 'test')
+
+    # URL Routes go here:
+    d.connect('cloud-scheduler-info', '/service/info', controller = cloudSchedulerService, action = 'info')
+
+
+
 
     def application(environ, start_response):
         #
@@ -50,14 +51,14 @@ try:
         if not logger:
             logger = logging.getLogger()
             logger.setLevel(logging.DEBUG)
-            h = logging.FileHandler('/tmp/rpi-web-wsgi.log')
+            h = logging.FileHandler('/tmp/rpi_web_wsgi.log')
             h.setFormatter(logging.Formatter('%(asctime)s %(thread)d : %(message)s'))
             logger.addHandler(h)
             logging.debug('Log handler added to root logger.')
         cherrypy.tree.mount(None, script_name='/wsgi/', config=conf)
         return cherrypy.tree(environ, start_response)
 
-    logging.info('rpi-web WSGI  app started')
+    logging.info('rpi_web WSGI  app started')
 
 except Exception as e:
-    logging.exception('Error in rpi-web WSGI app.')
+    logging.exception('Error in rpi_web WSGI app.')
