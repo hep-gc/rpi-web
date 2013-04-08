@@ -2,9 +2,6 @@ from base import RpiService
 import datetime
 
 class CloudSchedulerService(RpiService):
-    def getName(self):
-        return 'CloudScheduler'
-    
     def getSynopsis(self):
         return 'A service to schedule work between clouds.'
 
@@ -21,10 +18,10 @@ class CloudSchedulerService(RpiService):
         return datetime.datetime.now()
 
     def getInvocations(self):
-        raise NotImplementedError()
+        return 0
 
     def getLastReset(self):
-        raise NotImplementedError()
+        return datetime.datetime.now()
 
     def getDoc(self):
         return 'This is the service documentation page.'
@@ -32,4 +29,11 @@ class CloudSchedulerService(RpiService):
     def getReleaseNotes(self):
         return 'These are the release notes.'
 
+    def getSupport(self):
+        return 'These are the support notes.'
 
+    def getSource(self):
+        return 'https://github.com/hep-gc/cloud-scheduler'
+        
+    def getTryMe(self):
+        return '[Under Construction]'

@@ -2,11 +2,19 @@ import cherrypy
 import datetime
 import json
 import logging
+from utils import HtmlUtils
 
 class RpiService():
     """
     An abstract base class for all services.
     """
+
+    #
+    # URL routes handlers.
+    # The following route handlers will be called when specific URLs are visited.
+    # These methods will call the subclass's methods to get the information and then
+    # format it properly (i.e., json or html) before returning it to the caller.
+    #
 
     def info(self):
         """
@@ -30,7 +38,7 @@ class RpiService():
         The value of "version" will be taken as a string and can
         follow any versioning scheme you deem appropriate.
  
-        The value of "releaseTime" is in the format ddd mmm dd yyyy
+        The value of "dt" is in the format ddd mmm dd yyyy
         HH:MM:ss (example Sat Jun 09 2007 17:46:21). Please express in
         UTC rather than local time.
 
@@ -47,13 +55,15 @@ class RpiService():
         d['synopsis'] = self.getSynopsis()
         d['version'] = self.getVersion()
         d['institution'] = self.getInstitution()
-        # TODO: Convert datetime to UTC
-        d['releaseTime'] = self.getReleaseTime().strftime('%a %b %d %Y %H:%M:%S')
+        dt = self.getReleaseTime()
+        if (dt.tzinfo != None) and (dt.utcoffset() != None):
+            dt = dt.astimezone(pytz.utc)
+        d['releaseTime'] = dt.strftime('%a %b %d %Y %H:%M:%S')
 
         if acceptHeader == 'application/json':
             return json.dumps(d)
         else:
-            return """<html><pre>%s</pre></html>""" % (d)
+            return HtmlUtils().dictToPage(d)
 
 
     def stats(self):
@@ -86,13 +96,16 @@ class RpiService():
         """
         acceptHeader = cherrypy.lib.cptools.accept()
         d = {}
-        d['invocations'] = self.getInvocations()
-        d['lastReset'] = self.getLastReset()
+        d['invocations'] = str(self.getInvocations())
+        dt = self.getLastReset()
+        if (dt.tzinfo != None) and (dt.utcoffset() != None):
+            dt = dt.astimezone(pytz.utc)
+        d['lastReset'] = dt.strftime('%a %b %d %Y %H:%M:%S')
 
         if acceptHeader == 'application/json':
             return json.dumps(d)
         else:
-            return """<html><pre>%s</pre></html>""" % (d)
+            return HtmlUtils().dictToPage(d)
         
 
     def doc(self):
@@ -170,18 +183,31 @@ class RpiService():
 
 
 
+    def connectRoutes(self, d):
+        d.connect(self.__class__.__name__ + '-info', '/service/info', controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', '/service/stats', controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', '/service/doc', controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', '/service/releasenotes', controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', '/service/support', controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', '/service/source', controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', '/service/tryme', controller = self, action = 'tryme')
 
 
 
 
 
+
+
+
+    #
     # The following abastract methods needs to be implemented in
     # each RPI service subclasses.
     # These are defined in the "RPI API Enhancements for CANARIE 
     # Service Registry and Monitoring System" document.
+    #
 
     def getName(self):
-        raise NotImplementedError()
+        return self.__class__.__name__
 
     def getSynopsis(self):
         raise NotImplementedError()
@@ -202,6 +228,9 @@ class RpiService():
         raise NotImplementedError()
 
     def getLastReset(self):
+        """
+        Must return a datetime.datetime object.
+        """
         raise NotImplementedError()
 
     def getDoc(self):
