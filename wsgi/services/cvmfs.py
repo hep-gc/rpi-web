@@ -1,15 +1,15 @@
 from base import RpiService
 import datetime
 
-class CloudSchedulerService(RpiService):
+class CvmfsService(RpiService):
     def getUrlBase(self):
-        return 'cloudscheduler'
+        return 'cvmfs'
 
     def getSynopsis(self):
-        return 'A service to schedule work between clouds.'
+        return 'CVMFS is a scalable read-only HTTP file system designed for distributed software deployment that was developed at the CERN Laboratory.'
 
     def getVersion(self):
-        return '0.1'
+        return '???'
 
     def getInstitution(self):
         return 'UVIC HEP Group'
@@ -27,14 +27,11 @@ class CloudSchedulerService(RpiService):
         return datetime.datetime.now()
 
     def getDoc(self):
-        return 'This is the Cloud Scheuler service documentation page.'
+        return 'This is the CVMFS service documentation page.'
 
     def getReleaseNotes(self):
-        return 'These are the Cloud Scheuler service release notes.'
+        return 'These are the CVMFS service release notes.'
 
     def getSupport(self):
-        return 'These are the Cloud Scheuler service support notes.'
+        return 'These are the CVMFS service support notes.'
 
-    def getSource(self):
-        return '<a href="https://github.com/hep-gc/cloud-scheduler">https://github.com/hep-gc/cloud-scheduler</a>'
-        

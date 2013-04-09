@@ -184,13 +184,13 @@ class RpiService():
 
 
     def connectRoutes(self, d):
-        d.connect(self.__class__.__name__ + '-info', '/service/info', controller = self, action = 'info')
-        d.connect(self.__class__.__name__ + '-stats', '/service/stats', controller = self, action = 'stats')
-        d.connect(self.__class__.__name__ + '-doc', '/service/doc', controller = self, action = 'doc')
-        d.connect(self.__class__.__name__ + '-releasenotes', '/service/releasenotes', controller = self, action = 'releasenotes')
-        d.connect(self.__class__.__name__ + '-support', '/service/support', controller = self, action = 'support')
-        d.connect(self.__class__.__name__ + '-source', '/service/source', controller = self, action = 'source')
-        d.connect(self.__class__.__name__ + '-tryme', '/service/tryme', controller = self, action = 'tryme')
+        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self.getUrlBase()), controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self.getUrlBase()), controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self.getUrlBase()), controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self.getUrlBase()), controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self.getUrlBase()), controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self.getUrlBase()), controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self.getUrlBase()), controller = self, action = 'tryme')
 
 
 
@@ -206,6 +206,9 @@ class RpiService():
     # Service Registry and Monitoring System" document.
     #
 
+    def getUrlBase(self):
+        raise NotImplementedError()
+        
     def getName(self):
         return self.__class__.__name__
 
@@ -243,10 +246,12 @@ class RpiService():
         raise NotImplementedError()
 
     def getSource(self):
-        raise NotImplementedError()
+        # Defaults to 'No Content' if not implemented in subclass.
+        cherrypy.response.status = 204
         
     def getTryMe(self):
-        raise NotImplementedError()
+        # Defaults to 'No Content' if not implemented in subclass.
+        cherrypy.response.status = 204
         
 
 

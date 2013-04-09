@@ -10,6 +10,7 @@ import logging
 from cherrypy import _cperror
 
 from services.cloudscheduler import CloudSchedulerService
+from services.cvmfs import CvmfsService
 
 logger = None
 
@@ -34,10 +35,12 @@ try:
 
     # Create the handlers.
     cloudSchedulerService = CloudSchedulerService()
+    cvmfsService = CvmfsService()
     
 
     # Connect the handler's routes.
     cloudSchedulerService.connectRoutes(d)
+    cvmfsService.connectRoutes(d)
 
 
 
