@@ -27,20 +27,14 @@ conf['global'] = {'environment': 'embedded', 'log.error_file':'/tmp/rpi_web_wsgi
 try:
     logging.debug('Creating request dispatching routes...')
     d = cherrypy.dispatch.RoutesDispatcher()
-    m = d.mapper
-
 
     conf['/'] = {'request.dispatch': d}
 
-
     # Create the handlers.
-    cloudSchedulerService = CloudSchedulerService()
-    cvmfsService = CvmfsService()
+    cloudSchedulerService = CloudSchedulerService(d)
+    cvmfsService = CvmfsService(d)
     
 
-    # Connect the handler's routes.
-    cloudSchedulerService.connectRoutes(d)
-    cvmfsService.connectRoutes(d)
 
 
 

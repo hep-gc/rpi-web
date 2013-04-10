@@ -1,13 +1,60 @@
+import os
 import cherrypy
 import datetime
 import json
 import logging
+import ConfigParser
 from utils import HtmlUtils
+
+
+
 
 class RpiService():
     """
     An abstract base class for all services.
+
+    This base class will implement the required RPI REST API as
+    specified by CANARIE.  Where it needs to needs to fetch dynamic
+    data from the services, it will do so via a web service protocol
+    (i.e., xmlrpm), and then format the data accouring to the RPI API
+    specs and return the results to the caller.  This abstraction
+    layer means that the services themselves do not need to know
+    anything about the RPI API specs and can return the data using any
+    formatting they want.
+
+    This class also implements a configuration framework, allowing
+    each child of this class to have a configuration section in the
+    app configuration file.
     """
+
+    def __init__(self, d):
+        # Load configuration file
+        self._config = ConfigParser.ConfigParser()
+        configFile = os.path.expanduser('/etc/canarie-rpi/rpi-api.cfg')
+        if os.path.exists(configFile):
+            self._config.readfp(open(configFile))
+        else:
+            logging.info('%s configuration file does not exist.  Using defaults.' % (configFile))
+
+        self._connectRoutes(d)
+
+
+    def _getConfigSection(self):
+        return self.__class__.__name__
+
+    def _getFromConfig(self, option, default = None):
+        if self._config.has_option(self._getConfigSection(), option):
+            return self._config.get(self._getConfigSection(), option)
+        else:
+            return default
+
+    def _parseISOTimestamp(self, timestamp):
+        if timestamp == None:
+            return None
+        else:
+            # convert the ISO8601 string to a datetime object
+            converted = datetime.datetime.strptime(timestamp, "%Y%m%dT%H:%M:%S")
+            return converted
 
     #
     # URL routes handlers.
@@ -183,14 +230,36 @@ class RpiService():
 
 
 
-    def connectRoutes(self, d):
-        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self.getUrlBase()), controller = self, action = 'info')
-        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self.getUrlBase()), controller = self, action = 'stats')
-        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self.getUrlBase()), controller = self, action = 'doc')
-        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self.getUrlBase()), controller = self, action = 'releasenotes')
-        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self.getUrlBase()), controller = self, action = 'support')
-        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self.getUrlBase()), controller = self, action = 'source')
-        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self.getUrlBase()), controller = self, action = 'tryme')
+    def _connectRoutes(self, d):
+        """
+        Call this method to register the URL routes.
+        This method will register the following URIs:
+        
+          <base>/service/info
+          <base>/service/stats
+          <base>/service/doc
+          <base>/service/releasenotes
+          <base>/service/support
+          <base>/service/source
+          <base>/service/tryme
+
+        """
+        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
+
+
+    def _getUrlBase(self):
+        return self._getFromConfig('url_base', self.getName().lower())
+
+        
+    def _getXmlRpcServer(self):
+        return self._getFromConfig('xmlrpc_server')
+
 
 
 
@@ -200,58 +269,62 @@ class RpiService():
 
 
     #
-    # The following abastract methods needs to be implemented in
+    # The following abstract methods can be overriden in
     # each RPI service subclasses.
     # These are defined in the "RPI API Enhancements for CANARIE 
     # Service Registry and Monitoring System" document.
+    # The default implementation will try to read the value from
+    # the /etc/canarie-rpi/rpi-api.cfg configuration file.
     #
 
-    def getUrlBase(self):
-        raise NotImplementedError()
-        
     def getName(self):
-        return self.__class__.__name__
+        return self._getFromConfig('name', self.__class__.__name__)
 
     def getSynopsis(self):
-        raise NotImplementedError()
+        return self._getFromConfig('synopsis')
 
     def getVersion(self):
-        raise NotImplementedError()
+        return self._getFromConfig('version')
 
     def getInstitution(self):
-        raise NotImplementedError()
+        return self._getFromConfig('institution')
 
     def getReleaseTime(self):
-        """
-        Must return a datetime.datetime object.
-        """
-        raise NotImplementedError()
+        return self._parseISOTimestamp(self._getFromConfig('release_time'))
 
     def getInvocations(self):
-        raise NotImplementedError()
+        return self._getFromConfig('invocations')
 
     def getLastReset(self):
         """
         Must return a datetime.datetime object.
         """
-        raise NotImplementedError()
+        return self._parseISOTimestamp(self._getFromConfig('last_reset'))
 
     def getDoc(self):
-        raise NotImplementedError()
+         return self._getFromConfig('documentation')
 
     def getReleaseNotes(self):
-        raise NotImplementedError()
+         return self._getFromConfig('release_notes')
 
     def getSupport(self):
-        raise NotImplementedError()
+         return self._getFromConfig('support')
 
     def getSource(self):
         # Defaults to 'No Content' if not implemented in subclass.
-        cherrypy.response.status = 204
+        source = self._getFromConfig('support')
+        if source == None:
+            cherrypy.response.status = 204
+        else:
+            return source
         
     def getTryMe(self):
         # Defaults to 'No Content' if not implemented in subclass.
-        cherrypy.response.status = 204
+        tryme = self._getFromConfig('tryme')
+        if tryme == None:
+            cherrypy.response.status = 204
+        else:
+            return tryme
         
 
 

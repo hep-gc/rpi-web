@@ -1,0 +1,35 @@
+[CloudSchedulerService]
+url_base=cloudscheduler
+xmlrpc_server=http://condor.heprc.uvic.ca:8111
+name=Cloud Scheduler
+synopsis=A service to schedule work between clouds.
+institution=UVIC HEP Group
+version=?
+# release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+release_time=?
+invocations=0
+# last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+last_reset=?
+documentation=?
+release_notes=?
+support=?
+source=<a href="https://github.com/hep-gc/cloud-scheduler">https://github.com/hep-gc/cloud-scheduler</a>
+#tryme=
+
+
+[CvmfsService]
+url_base=cvmfs
+name=CVMFS
+synopsis=CVMFS is a scalable read-only HTTP file system designed for distributed software deployment that was developed at the CERN Laboratory.
+institution=UVIC HEP Group
+version=?
+# release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+release_time=?
+invocations=0
+# last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+last_reset=?
+documentation=?
+release_notes=?
+support=?
+#source=
+#tryme=

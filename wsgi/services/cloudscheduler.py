@@ -1,18 +1,11 @@
 from base import RpiService
 import datetime
+import xmlrpclib
 
 class CloudSchedulerService(RpiService):
-    def getUrlBase(self):
-        return 'cloudscheduler'
-
-    def getSynopsis(self):
-        return 'A service to schedule work between clouds.'
-
-    def getVersion(self):
-        return '0.1'
-
-    def getInstitution(self):
-        return 'UVIC HEP Group'
+#    def getVersion(self):
+#        proxy = xmlrpclib.ServerProxy(self._getXmlRpcServer())
+#        return proxy.get_version()
 
     def getReleaseTime(self):
         """
@@ -26,15 +19,3 @@ class CloudSchedulerService(RpiService):
     def getLastReset(self):
         return datetime.datetime.now()
 
-    def getDoc(self):
-        return 'This is the Cloud Scheuler service documentation page.'
-
-    def getReleaseNotes(self):
-        return 'These are the Cloud Scheuler service release notes.'
-
-    def getSupport(self):
-        return 'These are the Cloud Scheuler service support notes.'
-
-    def getSource(self):
-        return '<a href="https://github.com/hep-gc/cloud-scheduler">https://github.com/hep-gc/cloud-scheduler</a>'
-        

@@ -12,3 +12,8 @@ deploy-remote:
 	ssh root@$(RPI_WEB_HOST) "mkdir -p $(RPI_WEB_WSGI)"
 	rsync -avz -e ssh --delete --exclude '.git' --exclude '.rope*' --exclude '*~' --delete-excluded wsgi/ root@$(RPI_WEB_HOST):$(RPI_WEB_WSGI)
 	ssh root@$(RPI_WEB_HOST) "service httpd reload"
+
+deploy-cs-infoserver:
+	ssh andrec@condor.heprc.uvic.ca "mkdir -p ~/bin"
+	scp xmlrpc/rpiinfoservers/cloudscheduler_infoserver.py andrec@condor.heprc.uvic.ca:bin/
+
