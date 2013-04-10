@@ -53,7 +53,7 @@ class RpiService():
             return None
         else:
             # convert the ISO8601 string to a datetime object
-            converted = datetime.datetime.strptime(timestamp, "%Y%m%dT%H:%M:%S")
+            converted = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
             return converted
 
     #
@@ -148,9 +148,12 @@ class RpiService():
         d = {}
         d['invocations'] = str(self.getInvocations())
         dt = self.getLastReset()
-        if (dt.tzinfo != None) and (dt.utcoffset() != None):
-            dt = dt.astimezone(pytz.utc)
-        d['lastReset'] = dt.strftime('%a %b %d %Y %H:%M:%S')
+        if dt != None:
+            if (dt.tzinfo != None) and (dt.utcoffset() != None):
+                dt = dt.astimezone(pytz.utc)
+            d['lastReset'] = dt.strftime('%a %b %d %Y %H:%M:%S')
+        else:
+            d['releaseTime'] = ''
 
         if acceptHeader == 'application/json':
             return json.dumps(d)

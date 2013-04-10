@@ -7,14 +7,14 @@ class CloudSchedulerService(RpiService):
 #        proxy = xmlrpclib.ServerProxy(self._getXmlRpcServer())
 #        return proxy.get_version()
 
-    def getReleaseTime(self):
-        """
-        Must return a datetime.datetime object.
-        """
-        return datetime.datetime.now()
+#    def getReleaseTime(self):
+#        """
+#        Must return a datetime.datetime object.
+#        """
+#        return datetime.datetime.now()
 
-    def getInvocations(self):
-        return 0
+#    def getInvocations(self):
+#        return 0
 
     def getLastReset(self):
         return datetime.datetime.now()

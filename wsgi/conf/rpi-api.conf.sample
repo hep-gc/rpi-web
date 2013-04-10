@@ -4,12 +4,12 @@ xmlrpc_server=http://condor.heprc.uvic.ca:8111
 name=Cloud Scheduler
 synopsis=A service to schedule work between clouds.
 institution=UVIC HEP Group
-version=?
+version=1.4
 # release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-release_time=?
-invocations=0
+release_time=2012-01-01T00:00:00
+invocations=100000000
 # last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-last_reset=?
+#last_reset=
 documentation=?
 release_notes=?
 support=?
@@ -24,12 +24,13 @@ synopsis=CVMFS is a scalable read-only HTTP file system designed for distributed
 institution=UVIC HEP Group
 version=?
 # release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-release_time=?
+#release_time=
 invocations=0
 # last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-last_reset=?
+#last_reset=
 documentation=?
 release_notes=?
 support=?
 #source=
 #tryme=
+
