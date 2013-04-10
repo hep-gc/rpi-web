@@ -16,7 +16,7 @@ class RpiService():
     This base class will implement the required RPI REST API as
     specified by CANARIE.  Where it needs to needs to fetch dynamic
     data from the services, it will do so via a web service protocol
-    (i.e., xmlrpm), and then format the data accouring to the RPI API
+    (i.e., xmlrpm), and then format the data according to the RPI API
     specs and return the results to the caller.  This abstraction
     layer means that the services themselves do not need to know
     anything about the RPI API specs and can return the data using any
