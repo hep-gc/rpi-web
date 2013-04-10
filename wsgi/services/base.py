@@ -56,6 +56,51 @@ class RpiService():
             converted = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
             return converted
 
+    def _connectRoutes(self, d):
+        """
+        Call this method to register the URL routes.
+        This method will register the following URIs:
+        
+          <base>/service/info
+          <base>/service/stats
+          <base>/service/doc
+          <base>/service/releasenotes
+          <base>/service/support
+          <base>/service/source
+          <base>/service/tryme
+
+        """
+        d.connect(self.__class__.__name__ + '-info', 
+                  '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', 
+                  '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', 
+                  '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', 
+                  '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', 
+                  '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', 
+                  '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', 
+                  '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
+
+
+    def _getUrlBase(self):
+        return self._getFromConfig('url_base', self.getName().lower())
+
+        
+    def _getXmlRpcServer(self):
+        return self._getFromConfig('xmlrpc_server')
+
+
+
+
+
+
+
+
+
     #
     # URL routes handlers.
     # The following route handlers will be called when specific URLs are visited.
@@ -236,35 +281,6 @@ class RpiService():
 
 
 
-    def _connectRoutes(self, d):
-        """
-        Call this method to register the URL routes.
-        This method will register the following URIs:
-        
-          <base>/service/info
-          <base>/service/stats
-          <base>/service/doc
-          <base>/service/releasenotes
-          <base>/service/support
-          <base>/service/source
-          <base>/service/tryme
-
-        """
-        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
-        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
-        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
-        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
-        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
-        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
-        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
-
-
-    def _getUrlBase(self):
-        return self._getFromConfig('url_base', self.getName().lower())
-
-        
-    def _getXmlRpcServer(self):
-        return self._getFromConfig('xmlrpc_server')
 
 
 
