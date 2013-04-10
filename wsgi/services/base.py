@@ -103,9 +103,12 @@ class RpiService():
         d['version'] = self.getVersion()
         d['institution'] = self.getInstitution()
         dt = self.getReleaseTime()
-        if (dt.tzinfo != None) and (dt.utcoffset() != None):
-            dt = dt.astimezone(pytz.utc)
-        d['releaseTime'] = dt.strftime('%a %b %d %Y %H:%M:%S')
+        if dt != None:
+            if (dt.tzinfo != None) and (dt.utcoffset() != None):
+                dt = dt.astimezone(pytz.utc)
+            d['releaseTime'] = dt.strftime('%a %b %d %Y %H:%M:%S')
+        else:
+            d['releaseTime'] = ''
 
         if acceptHeader == 'application/json':
             return json.dumps(d)
@@ -281,19 +284,19 @@ class RpiService():
         return self._getFromConfig('name', self.__class__.__name__)
 
     def getSynopsis(self):
-        return self._getFromConfig('synopsis')
+        return self._getFromConfig('synopsis', '')
 
     def getVersion(self):
-        return self._getFromConfig('version')
+        return self._getFromConfig('version', '')
 
     def getInstitution(self):
-        return self._getFromConfig('institution')
+        return self._getFromConfig('institution', '')
 
     def getReleaseTime(self):
         return self._parseISOTimestamp(self._getFromConfig('release_time'))
 
     def getInvocations(self):
-        return self._getFromConfig('invocations')
+        return self._getFromConfig('invocations', '')
 
     def getLastReset(self):
         """
@@ -302,17 +305,17 @@ class RpiService():
         return self._parseISOTimestamp(self._getFromConfig('last_reset'))
 
     def getDoc(self):
-         return self._getFromConfig('documentation')
+         return self._getFromConfig('documentation', '')
 
     def getReleaseNotes(self):
-         return self._getFromConfig('release_notes')
+         return self._getFromConfig('release_notes', '')
 
     def getSupport(self):
-         return self._getFromConfig('support')
+         return self._getFromConfig('support', '')
 
     def getSource(self):
         # Defaults to 'No Content' if not implemented in subclass.
-        source = self._getFromConfig('support')
+        source = self._getFromConfig('source')
         if source == None:
             cherrypy.response.status = 204
         else:
