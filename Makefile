@@ -10,7 +10,7 @@ deploy:
 
 deploy-remote:
 	#ssh -t $(RPI_WEB_HOST) "sudo mkdir -p $(RPI_WEB_WSGI)"
-	rsync -avz -e ssh --delete --exclude '.git' --exclude '.rope*' --exclude '*~' --delete-excluded wsgi/ rpiwebdev@$(RPI_WEB_HOST):$(RPI_WEB_WSGI)
+	rsync -avz -e ssh --delete --exclude '.git' --exclude '.rope*' --exclude '*~' --delete-excluded wsgi/ $(RPI_WEB_HOST):$(RPI_WEB_WSGI)
 	ssh -t $(RPI_WEB_HOST) "sudo service httpd reload"
 
 deploy-cs-infoserver:
