@@ -9,11 +9,10 @@ deploy:
 	cp -r wsgi/* $(RPI_WEB_WSGI)
 
 deploy-remote:
-	ssh root@$(RPI_WEB_HOST) "mkdir -p $(RPI_WEB_WSGI)"
-	rsync -avz -e ssh --delete --exclude '.git' --exclude '.rope*' --exclude '*~' --delete-excluded wsgi/ root@$(RPI_WEB_HOST):$(RPI_WEB_WSGI)
-	ssh root@$(RPI_WEB_HOST) "service httpd reload"
+	ssh $(RPI_WEB_HOST) "sudo mkdir -p $(RPI_WEB_WSGI)"
+	rsync -avz -e ssh --delete --exclude '.git' --exclude '.rope*' --exclude '*~' --delete-excluded wsgi/ $(RPI_WEB_HOST):$(RPI_WEB_WSGI)
+	ssh $(RPI_WEB_HOST) "sudo service httpd reload"
 
 deploy-cs-infoserver:
-	ssh andrec@condor.heprc.uvic.ca "mkdir -p ~/bin"
-	scp xmlrpc/rpiinfoservers/cloudscheduler_infoserver.py andrec@condor.heprc.uvic.ca:bin/
+	scp xmlrpc/rpiinfoservers/cloudscheduler_infoserver.py $(CS_INFO_SERVER):bin/
 
