@@ -8,7 +8,7 @@ import atexit
 import threading
 import logging
 from cherrypy import _cperror
-
+from services.batch import BatchService
 from services.cloudscheduler import CloudSchedulerService
 from services.cvmfs import CvmfsService
 
@@ -33,6 +33,7 @@ try:
     # Create the handlers.
     cloudSchedulerService = CloudSchedulerService(d)
     cvmfsService = CvmfsService(d)
+    batchService = BatchService(d)
     
 
 
