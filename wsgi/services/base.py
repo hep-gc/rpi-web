@@ -93,6 +93,19 @@ class RpiService():
     def _getXmlRpcServer(self):
         return self._getFromConfig('xmlrpc_server')
 
+    def _processReturnValue(self, s):
+        """
+        This method will parse the return value and act on specific
+        keywords found in the return value:
+
+        - If s starts with a 'REDIRECT:' keyword, then the text on the left of
+        the keyword will be put into a HTTP redirect response.
+        """
+        if s.find('REDIRECT:') == 0:
+            raise cherrypy.HTTPRedirect(s.split(':', 1)[1])
+        else:
+            return s
+
 
 
 
@@ -223,7 +236,7 @@ class RpiService():
         If the documentation is hosted elsewhere, returning an HTTP
         redirect in response to this request is acceptable.
         """
-        return self.getDoc()
+        return self._processReturnValue(self.getDoc())
 
 
     def releasenotes(self):
@@ -238,7 +251,7 @@ class RpiService():
         release notes are hosted elsewhere, please return an HTTP
         redirect in response to this request.
         """
-        return self.getReleaseNotes()
+        return self._processReturnValue(self.getReleaseNotes())
 
 
     def support(self):
@@ -251,7 +264,7 @@ class RpiService():
         format. Include help desk contact info, a link to any bug
         tracking systems and/or forums, etc.
         """
-        return self.getSupport()
+        return self._processReturnValue(self.getSupport())
 
 
     def source(self):
@@ -264,7 +277,7 @@ class RpiService():
         your service's source code, please return status code 204 (No
         Content).
         """
-        return self.getSource()
+        return self._processReturnValue(self.getSource())
 
 
     def tryme(self):
@@ -277,7 +290,7 @@ class RpiService():
         purposes. If you are not providing this capability, please
         return status code 204 (No Content).
         """
-        return self.getTryMe()
+        return self._processReturnValue(self.getTryMe())
 
 
 
@@ -324,13 +337,13 @@ class RpiService():
         return self._parseISOTimestamp(self._getFromConfig('last_reset'))
 
     def getDoc(self):
-         return self._getFromConfig('documentation', '')
+        return self._getFromConfig('documentation', '')
 
     def getReleaseNotes(self):
-         return self._getFromConfig('release_notes', '')
+        return self._getFromConfig('release_notes', '')
 
     def getSupport(self):
-         return self._getFromConfig('support', '')
+        return self._getFromConfig('support', '')
 
     def getSource(self):
         # Defaults to 'No Content' if not implemented in subclass.
