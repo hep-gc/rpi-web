@@ -5,10 +5,10 @@ name=Cloud Scheduler
 synopsis=A service to schedule work between clouds.
 institution=UVIC HEP Group
 version=1.4
-# release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-release_time=2012-01-01T00:00:00
+# release_time, in UTC
+release_time=Wed May 01 2013 00:00:00
 invocations=100000000
-# last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+# last_reset, in UTC
 #last_reset=
 documentation=?
 release_notes=?
@@ -23,10 +23,10 @@ name=CVMFS
 synopsis=CVMFS is a scalable read-only HTTP file system designed for distributed software deployment that was developed at the CERN Laboratory.
 institution=UVIC HEP Group
 version=?
-# release_time must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
-#release_time=
+# release_time, in UTC
+release_time=Wed May 01 2013 00:00:00
 invocations=0
-# last_reset must be a timestamp in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+# last_reset, in UTC
 #last_reset=
 documentation=?
 release_notes=?
