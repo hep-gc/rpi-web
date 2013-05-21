@@ -48,14 +48,6 @@ class RpiService():
         else:
             return default
 
-    def _parseISOTimestamp(self, timestamp):
-        if timestamp == None:
-            return None
-        else:
-            # convert the ISO8601 string to a datetime object
-            converted = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
-            return converted
-
     def _connectRoutes(self, d):
         """
         Call this method to register the URL routes.
@@ -160,13 +152,7 @@ class RpiService():
         d['synopsis'] = self.getSynopsis()
         d['version'] = self.getVersion()
         d['institution'] = self.getInstitution()
-        dt = self.getReleaseTime()
-        if dt != None:
-            if (dt.tzinfo != None) and (dt.utcoffset() != None):
-                dt = dt.astimezone(pytz.utc)
-            d['releaseTime'] = dt.strftime('%a %b %d %Y %H:%M:%S')
-        else:
-            d['releaseTime'] = ''
+        d['releaseTime'] = str(self.getReleaseTime())
 
         if acceptHeader == 'application/json':
             return json.dumps(d)
@@ -205,14 +191,7 @@ class RpiService():
         acceptHeader = cherrypy.lib.cptools.accept()
         d = {}
         d['invocations'] = str(self.getInvocations())
-        dt = self.getLastReset()
-        if dt != None:
-            if (dt.tzinfo != None) and (dt.utcoffset() != None):
-                dt = dt.astimezone(pytz.utc)
-            d['lastReset'] = dt.strftime('%a %b %d %Y %H:%M:%S')
-        else:
-            d['releaseTime'] = ''
-
+        d['lastReset'] = str(self.getLastReset())
         if acceptHeader == 'application/json':
             return json.dumps(d)
         else:
@@ -325,7 +304,7 @@ class RpiService():
         return self._getFromConfig('institution', '')
 
     def getReleaseTime(self):
-        return self._parseISOTimestamp(self._getFromConfig('release_time'))
+        return self._getFromConfig('release_time')
 
     def getInvocations(self):
         return self._getFromConfig('invocations', '')
@@ -334,7 +313,7 @@ class RpiService():
         """
         Must return a datetime.datetime object.
         """
-        return self._parseISOTimestamp(self._getFromConfig('last_reset'))
+        return self._getFromConfig('last_reset')
 
     def getDoc(self):
         return self._getFromConfig('documentation', '')
