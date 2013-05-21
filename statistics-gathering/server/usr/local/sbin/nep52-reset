@@ -1,0 +1,9 @@
+#!/bin/bash
+    current_utc_time=`date -u +'%a %b %d %Y %T'`
+    redis-cli set nep52-cs-boot 0 > /dev/null
+    redis-cli set nep52-cs-clock 0 > /dev/null
+    redis-cli set nep52-cvmfs-boot 0 > /dev/null
+    redis-cli set nep52-cvmfs-clock 0 > /dev/null
+    redis-cli set nep52-client-boot 0 > /dev/null
+    redis-cli set nep52-client-clock 0 > /dev/null
+    redis-cli set nep52-reset-date "$current_utc_time" > /dev/null

@@ -1,0 +1,41 @@
+The statistics gathering function for CANARIE NEP-RPI consist of message and key/value
+servers running on the Drupal web portal, and a message generating event script running 
+on the client Virtual Machines (VMs).
+
+The following packages are prerequisites:
+
+   o On the server:
+      - rabbitmq-server
+      - redis
+
+   o On the client:
+      - librabbitmq
+
+Installation:
+
+   o On the server:
+      - Ensure that the prerequisites are installed and running.
+      - "cp ./server/usr/local/sbin/nep52-consumer /usr/local/sbin/"
+      - "cp ./server/usr/local/sbin/nep52-count /usr/local/sbin/"
+      - "cp ./server/usr/local/sbin/nep52-reset /usr/local/sbin/"
+      - "cp ./server/usr/local/sbin/nep52-show /usr/local/sbin/"
+      - "cp ./server/etc/init.d/nep52-consumer /etc/init.d/"
+      - "chkconfig nep52-consumer on"
+      - "service nep52-consumer start"
+
+   o On the client:
+      - Ensure that the prerequisite is installed.
+      - "cp ./client/usr/local/sbin/nep52-publisher /usr/local/sbin/"
+      - "cp ./client/etc/rc.local /etc/" or modify your current rc.local to issue
+        "/usr/local/sbin/nep52-publisher <vm-type> boot" command.
+      - Edit the new rc.local and modify the "<vm-type>" parameter to one of the
+        valid VM types given below.
+      - "cp ./client/etc/cron.hourly/0nep52-publisher /etc/cron.hourly/"
+      - Edit the new hourly crontab and modify the "<vm-type>" parameter to one of the
+        valid VM types given below.
+
+Valid VM types:
+
+   o "cs"     - for HTCondor/Cloud Scheduler VMs.
+   o "cvmfs"  - for CVMFS VMs.
+   o "client" - for batch worker VMs.

@@ -1,0 +1,15 @@
+#!/bin/bash
+    x=`redis-cli get nep52-reset-date`
+    echo 'Last reset (UTC)                : '$x
+    x=`redis-cli get nep52-cs-boot`
+    echo 'Number of Cloud Scheduler boots : '$x
+    x=`redis-cli get nep52-cs-clock`
+    echo 'Cloud Scheduler hours           : '$x
+    x=`redis-cli get nep52-cvmfs-boot`
+    echo 'Number of CVMFS appliance boots : '$x
+    x=`redis-cli get nep52-cvmfs-clock`
+    echo 'CVMFS appliance hours           : '$x
+    x=`redis-cli get nep52-client-boot`
+    echo 'Number of batch client boots    : '$x
+    x=`redis-cli get nep52-client-clock`
+    echo 'Batch client hours              : '$x

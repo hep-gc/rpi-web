@@ -1,0 +1,4 @@
+#!/bin/bash
+    # Use nep52-publisher. This JSON version is only provided as an example. To use the 
+    # JSON publisher, you will need to modify nep52-count to correctly process the JSON.
+    amqp-publish -s rpi.heprc.uvic.ca -r nep52-counter-Q -b "{ VMtype: $1, Event: $2, Host: "`hostname -f`' }'

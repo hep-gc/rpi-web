@@ -1,0 +1,2 @@
+#!/bin/bash
+    amqp-publish -s rpi.heprc.uvic.ca -r nep52-counter-Q -b "$1 $2 "`hostname -f`
