@@ -5,6 +5,7 @@ on the client Virtual Machines (VMs).
 The following packages are prerequisites:
 
    o On the server:
+      - librabbitmq
       - rabbitmq-server
       - redis
 
@@ -15,6 +16,7 @@ Installation:
 
    o On the server:
       - Ensure that the prerequisites are installed and running.
+      - Open port 5672.
       - "cp ./server/usr/local/sbin/nep52-consumer /usr/local/sbin/"
       - "cp ./server/usr/local/sbin/nep52-count /usr/local/sbin/"
       - "cp ./server/usr/local/sbin/nep52-reset /usr/local/sbin/"
