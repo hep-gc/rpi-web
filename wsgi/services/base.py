@@ -99,7 +99,12 @@ class RpiService():
             return s
 
 
-
+    def _should_return_json(self):
+        """
+        This method will look at the Accept header to check if we should
+        return JSON or not.
+        """
+        return cherrypy.request.headers['Accept'].lower() == "application/json"
 
 
 
@@ -144,8 +149,6 @@ class RpiService():
         HTML page providing the information listed above in
         human-readable format.
         """
-        acceptHeader = cherrypy.lib.cptools.accept()
-        logging.debug('Accept header: %s' % (acceptHeader))
 
         d = {}
         d['name'] = self.getName()
@@ -154,7 +157,7 @@ class RpiService():
         d['institution'] = self.getInstitution()
         d['releaseTime'] = str(self.getReleaseTime())
 
-        if acceptHeader == 'application/json':
+        if self._should_return_json():
             return json.dumps(d)
         else:
             return HtmlUtils().dictToPage(d)
@@ -188,11 +191,10 @@ class RpiService():
         local time. If you reset your invocations value to zero or it
         wraps around, please update this value accordingly.
         """
-        acceptHeader = cherrypy.lib.cptools.accept()
         d = {}
         d['invocations'] = str(self.getInvocations())
         d['lastReset'] = str(self.getLastReset())
-        if acceptHeader == 'application/json':
+        if self._should_return_json():
             return json.dumps(d)
         else:
             return HtmlUtils().dictToPage(d)
