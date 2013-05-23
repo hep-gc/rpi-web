@@ -1,5 +1,6 @@
 from base import RpiService
 import redis
+import collections
 
 
 
@@ -16,7 +17,7 @@ class BatchService(RpiService):
 
 
     def getInvocations(self):
-        values = {}
+        values = collections.OrderedDict()
         values['Number of Cloud Scheduler boots'] = self.r.get('nep52-cs-boot')
         values['Cloud Scheduler hours'] = self.r.get('nep52-cs-clock')
 
