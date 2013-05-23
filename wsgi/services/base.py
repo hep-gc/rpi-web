@@ -192,7 +192,7 @@ class RpiService():
         wraps around, please update this value accordingly.
         """
         d = {}
-        d['invocations'] = str(self.getInvocations())
+        d['invocations'] = self.getInvocations()
         d['lastReset'] = str(self.getLastReset())
         if self._should_return_json():
             return json.dumps(d)
@@ -312,9 +312,6 @@ class RpiService():
         return self._getFromConfig('invocations', '')
 
     def getLastReset(self):
-        """
-        Must return a datetime.datetime object.
-        """
         return self._getFromConfig('last_reset')
 
     def getDoc(self):

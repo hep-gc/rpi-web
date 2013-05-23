@@ -58,7 +58,7 @@ try:
         cherrypy.tree.mount(None, script_name='/wsgi/', config=conf)
         return cherrypy.tree(environ, start_response)
 
-    logging.info('rpi_web WSGI  app started')
+    logging.info('rpi_web WSGI app started')
 
 except Exception as e:
     logging.exception('Error in rpi_web WSGI app.')

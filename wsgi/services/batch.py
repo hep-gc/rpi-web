@@ -1,7 +1,14 @@
 from base import RpiService
 import redis
 
+
+
 class BatchService(RpiService):
+    """
+    This class implements the Batch Service.
+    It will query the redis database to get information about
+    the status of the service.
+    """
 
     def __init__(self, d):
         RpiService.__init__(self, d)
@@ -9,7 +16,6 @@ class BatchService(RpiService):
 
 
     def getInvocations(self):
-        #return self.r.get('nep52-client-boot')
         values = {}
         values['Number of Cloud Scheduler boots'] = self.r.get('nep52-cs-boot')
         values['Cloud Scheduler hours'] = self.r.get('nep52-cs-clock')
