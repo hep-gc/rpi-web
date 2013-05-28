@@ -1,5 +1,6 @@
 #!/bin/bash
-    current_utc_time=`date -u +'%a %b %d %Y %T'`
+#   current_utc_time=`date -u +'%a %b %d %Y %T'`
+    current_utc_time=`date -u +'%Y-%m-%dT%TZ'`
     redis-cli set nep52-cs-boot 0 > /dev/null
     redis-cli set nep52-cs-clock 0 > /dev/null
     redis-cli set nep52-cvmfs-boot 0 > /dev/null
