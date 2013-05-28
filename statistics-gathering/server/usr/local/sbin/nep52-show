@@ -1,15 +1,23 @@
 #!/bin/bash
+    declare -i sum
     x=`redis-cli get nep52-reset-date`
     echo 'Last reset (UTC)                : '$x
     x=`redis-cli get nep52-cs-boot`
     echo 'Number of Cloud Scheduler boots : '$x
+    sum=$x
     x=`redis-cli get nep52-cs-clock`
     echo 'Cloud Scheduler hours           : '$x
+    sum=$sum+$x
     x=`redis-cli get nep52-cvmfs-boot`
     echo 'Number of CVMFS appliance boots : '$x
+    sum=$sum+$x
     x=`redis-cli get nep52-cvmfs-clock`
     echo 'CVMFS appliance hours           : '$x
+    sum=$sum+$x
     x=`redis-cli get nep52-client-boot`
     echo 'Number of batch client boots    : '$x
+    sum=$sum+$x
     x=`redis-cli get nep52-client-clock`
     echo 'Batch client hours              : '$x
+    sum=$sum+$x
+    echo 'Invocations                     : '$sum
