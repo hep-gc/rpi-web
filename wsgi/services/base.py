@@ -158,6 +158,7 @@ class RpiService():
         d['releaseTime'] = str(self.getReleaseTime())
 
         if self._should_return_json():
+            cherrypy.response.headers['Content-Type'] = "application/json"
             return json.dumps(d)
         else:
             return HtmlUtils().dictToPage(d)
@@ -195,6 +196,7 @@ class RpiService():
         d['invocations'] = self.getInvocations()
         d['lastReset'] = str(self.getLastReset())
         if self._should_return_json():
+            cherrypy.response.headers['Content-Type'] = "application/json"
             return json.dumps(d)
         else:
             return HtmlUtils().dictToPage(d)
