@@ -17,16 +17,7 @@ class BatchService(RpiService):
 
 
     def getInvocations(self):
-        values = collections.OrderedDict()
-        values['Number of Cloud Scheduler boots'] = self.r.get('nep52-cs-boot')
-        values['Cloud Scheduler hours'] = self.r.get('nep52-cs-clock')
-
-        values['Number of CVMFS appliance boots'] = self.r.get('nep52-cvmfs-boot')
-        values['CVMFS appliance hours'] = self.r.get('nep52-cvmfs-clock')
-
-        values['Number of batch client boots'] = self.r.get('nep52-client-boot')
-        values['Batch client hours'] = self.r.get('nep52-client-clock')
-        return values
+        return int(self.r.get('nep52-cs-boot')) + int(self.r.get('nep52-cs-clock')) + int(self.r.get('nep52-cvmfs-boot')) + int(self.r.get('nep52-cvmfs-clock')) + int(self.r.get('nep52-client-boot')) + int(self.r.get('nep52-client-clock'))
 
 
     def getLastReset(self):
