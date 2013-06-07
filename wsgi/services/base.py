@@ -62,20 +62,13 @@ class RpiService():
           <base>/service/tryme
 
         """
-        d.connect(self.__class__.__name__ + '-info', 
-                  '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
-        d.connect(self.__class__.__name__ + '-stats', 
-                  '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
-        d.connect(self.__class__.__name__ + '-doc', 
-                  '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
-        d.connect(self.__class__.__name__ + '-releasenotes', 
-                  '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
-        d.connect(self.__class__.__name__ + '-support', 
-                  '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
-        d.connect(self.__class__.__name__ + '-source', 
-                  '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
-        d.connect(self.__class__.__name__ + '-tryme', 
-                  '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
+        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
 
 
     def _getUrlBase(self):

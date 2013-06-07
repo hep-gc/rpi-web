@@ -9,8 +9,6 @@ import threading
 import logging
 from cherrypy import _cperror
 from services.batch import BatchService
-from services.cloudscheduler import CloudSchedulerService
-from services.cvmfs import CvmfsService
 
 logger = None
 
@@ -31,8 +29,6 @@ try:
     conf['/'] = {'request.dispatch': d}
 
     # Create the handlers.
-    cloudSchedulerService = CloudSchedulerService(d)
-    cvmfsService = CvmfsService(d)
     batchService = BatchService(d)
     
 

@@ -6,10 +6,11 @@ This repository contains the implementation of the RPI API, as specified by CANA
 * Cloud Scheduler
 * CVMFS
 
-Developers will most likely be interested in editing the following 2 classes:
+The above 2 components are grouped into a service named "Batch".
 
-* wsgi/services/cloudscheduler.py
-* wsgi/services/cvmfs.py
+Developers will most likely be interested in editing the following class:
+
+* wsgi/services/batch.py
 
 More documentation is available online at: https://rpi.heprc.uvic.ca/ under "Documentation".
 
