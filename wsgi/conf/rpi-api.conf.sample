@@ -1,36 +1,18 @@
-[CloudSchedulerService]
-url_base=cloudscheduler
-xmlrpc_server=http://condor.heprc.uvic.ca:8111
-name=Cloud Scheduler
-synopsis=A service to schedule work between clouds.
-institution=UVIC HEP Group
-version=1.4
-# release_time, in UTC
-release_time=Wed May 01 2013 00:00:00
-invocations=100000000
-# last_reset, in UTC
-#last_reset=
-documentation=?
-release_notes=?
-support=?
-source=<a href="https://github.com/hep-gc/cloud-scheduler">https://github.com/hep-gc/cloud-scheduler</a>
-#tryme=
-
-
-[CvmfsService]
-url_base=cvmfs
-name=CVMFS
-synopsis=CVMFS is a scalable read-only HTTP file system designed for distributed software deployment that was developed at the CERN Laboratory.
-institution=UVIC HEP Group
-version=?
-# release_time, in UTC
-release_time=Wed May 01 2013 00:00:00
-invocations=0
-# last_reset, in UTC
-#last_reset=
-documentation=?
-release_notes=?
-support=?
-#source=
-#tryme=
-
+[BatchService]
+url_base=batchservice
+name=Batch Services
+synopsis=NEP52 batch services provides a powerful, scalable batch processing capability to the Research Platform Initiative (RPI). This function is enabled through three Virtual Machine (VM) public images available through the OpenStack dashboard.
+institution=University of Victoria
+version=1.0
+release_time=2013-05-01T00:00:00Z
+category=Resource/Cloud Management
+tags=batch,job,automatic,startup,shutdown,VM,virtual,software,repository
+usage_type=invocations
+usage=0
+documentation=REDIRECT:https://wiki.heprc.uvic.ca/twiki/bin/view/Main/NEP52RPIDocument
+release_notes=REDIRECT:https://github.com/hep-gc/cloud-scheduler/blob/master/README.md
+support=REDIRECT:https://lists.uvic.ca/mailman/listinfo/batch-rpi
+source=REDIRECT:https://github.com/hep-gc/cloud-scheduler
+tryme=REDIRECT:https://nova-ab.dair-atir.canarie.ca/nova/images_and_snapshots/
+licence=REDIRECT:https://github.com/hep-gc/cloud-scheduler/blob/master/README.md
+#provenance=

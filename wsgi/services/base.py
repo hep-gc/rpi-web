@@ -60,6 +60,8 @@ class RpiService():
           <base>/service/support
           <base>/service/source
           <base>/service/tryme
+          <base>/service/licence
+          <base>/service/provenance
 
         """
         d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
@@ -69,6 +71,8 @@ class RpiService():
         d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
         d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
         d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
+        d.connect(self.__class__.__name__ + '-licence', '/%s/service/licence' % (self._getUrlBase()), controller = self, action = 'licence')
+        d.connect(self.__class__.__name__ + '-provenance', '/%s/service/provenance' % (self._getUrlBase()), controller = self, action = 'provenance')
 
 
     def _getUrlBase(self):
@@ -126,16 +130,34 @@ class RpiService():
 	"synopsis": "<one or two sentences describing what the service is for>",
 	"version" : "<service version identifier>",
 	"institution": "<the name of the institution responsible for the service>",
-	"releaseTime": <time at which this version of the service was published>"
+	"releaseTime": "<time at which this version of the service was published>",
+        "category": "<the thype of service>",
+        "tags": [<terms describing this service - to be used in service searches>]
         }
 
         where:
         The value of "version" will be taken as a string and can
         follow any versioning scheme you deem appropriate.
  
-        The value of "dt" is in the format ddd mmm dd yyyy
-        HH:MM:ss (example Sat Jun 09 2007 17:46:21). Please express in
-        UTC rather than local time.
+        "releaseTime" is formatted as YYYY-MM-DDThh:mm:ssZ (ISO
+        8601). Please express in UTC rather than local time.
+
+        "category" is one of:
+          * Sensor Management/Data Acquisition
+          * Data Storage and Retrieval
+          * Data Manipulation
+          * Data Visualization
+          * Resource/Cloud Management
+          * Service Registration/Discovery
+          * Workflow/Service Scheduling
+          * User Management/Authentication
+          * Other
+
+        "tags" contains a (possibly empty) list of terms describing
+        the service that could be used to aid in service searches.
+        This structure should be implemented as a JSON array with
+        strings as elements.
+
 
         If an HTTP GET is performed and the Accept header does not
         indicate json, or there is no Accept header, please return an
@@ -149,6 +171,8 @@ class RpiService():
         d['version'] = self.getVersion()
         d['institution'] = self.getInstitution()
         d['releaseTime'] = str(self.getReleaseTime())
+        d['category'] = self.getCategory()
+        d['tags'] = self.getTags()
 
         if self._should_return_json():
             cherrypy.response.headers['Content-Type'] = "application/json"
@@ -171,22 +195,30 @@ class RpiService():
         following:
 
         {
-	"invocations" : "<number of times service has been used since last reset>",
-	"lastReset": "<the time and date at which invocations was last reset to zero>",
+	"<usage type>" : "<service usage count since last reset>",
+	"lastReset": "<the time and date at which the <usage type> field was last reset to zero>",
         }
 
         where:
-        The value of "invocations" is a positive integer. This value
-        should start at zero when the service is first published and
-        should be incremented every time the service's API (excluding
-        anything under <base>/service) is accessed.  The value of
-        "lastReset" is in the format ddd mmm dd yyyy HH:MM:ss (example
-        Sat Jun 09 2007 17:46:21). Please express in UTC rather than
-        local time. If you reset your invocations value to zero or it
-        wraps around, please update this value accordingly.
+
+          * <usage type> is a meaningful field name that indicates the
+          type of usage, along with units where appropriate, being
+          reported.
+
+          * The value of "<usage type>" is a positive integer. This
+          value should start at zero when the service is first published
+          and should be incremented every time the service is used,
+          according to whatever usage criteria the service creator has
+          defined.
+
+          * "lastReset" is formatted as YYYY-MM-DDThh:mm:ssZ
+          (ISO 8601). Please express in UTC rather than local time.  If
+          you reset the <usage type> value to zero or it wraps around,
+          please update this value accordingly.
+
         """
         d = {}
-        d['invocations'] = self.getInvocations()
+        d[self.getUsageType()] = self.getUsage()
         d['lastReset'] = str(self.getLastReset())
         if self._should_return_json():
             cherrypy.response.headers['Content-Type'] = "application/json"
@@ -203,11 +235,11 @@ class RpiService():
         for your service in a human-readable format. This information
         should include:
 
-        A detailed description of the service and what it does
+          * A detailed description of the service and what it does
 
-        A complete description of the API
+          * A complete description of the API
 
-        Sample code illustrating API usage, as appropriate
+          * Sample code illustrating API usage, as appropriate
 
         If the documentation is hosted elsewhere, returning an HTTP
         redirect in response to this request is acceptable.
@@ -269,9 +301,29 @@ class RpiService():
         return self._processReturnValue(self.getTryMe())
 
 
+    def licence(self):
+        """
+        Allow users to view your service's licencing/usage term.
+
+        When an HTTP GET is performed, return a page that indicates
+        the licences and usage terms/restrictions associated with your
+        service.
+        """
+        return self._processReturnValue(self.getLicence())
 
 
+    def provenance(self):
+        """
+        Allow users to view the sofware provenance process used when
+        making a new release of your service publicly available.  
 
+        When an HTTP GET is performed, return a page that tells potential
+        users what criteria has to be met before a version of your
+        service is made public.  Include information about who
+        authorizes releases and what validation/documentation must be
+        completed prior to the release.
+        """
+        return self._processReturnValue(self.getProvenance())
 
 
 
@@ -303,8 +355,17 @@ class RpiService():
     def getReleaseTime(self):
         return self._getFromConfig('release_time')
 
-    def getInvocations(self):
-        return self._getFromConfig('invocations', '')
+    def getCategory(self):
+        return self._getFromConfig('category', '')
+
+    def getTags(self):
+        return self._getFromConfig('tags', '').split(',')
+
+    def getUsageType(self):
+        return self._getFromConfig('usage_type', 'invocations')
+
+    def getUsage(self):
+        return self._getFromConfig('usage', 0)
 
     def getLastReset(self):
         return self._getFromConfig('last_reset')
@@ -333,6 +394,11 @@ class RpiService():
             cherrypy.response.status = 204
         else:
             return tryme
+
+    def getLicence(self):
+        return self._getFromConfig('licence', '')
         
+    def getProvenance(self):
+        return self._getFromConfig('provenance', '')
 
 
