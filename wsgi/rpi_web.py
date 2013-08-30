@@ -9,6 +9,7 @@ import threading
 import logging
 from cherrypy import _cperror
 from services.batch import BatchService
+from services.softrepo import SoftwareRepository
 
 logger = None
 
@@ -30,6 +31,7 @@ try:
 
     # Create the handlers.
     batchService = BatchService(d)
+    softRepo = SoftwareRepository(d)
     
 
 
