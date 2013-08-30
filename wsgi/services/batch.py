@@ -17,7 +17,7 @@ class BatchService(RpiService):
 
 
     def getUsage(self):
-        return int(self.r.get('nep52-cs-boot')) + int(self.r.get('nep52-cs-clock')) + int(self.r.get('nep52-cvmfs-boot')) + int(self.r.get('nep52-cvmfs-clock')) + int(self.r.get('nep52-client-boot')) + int(self.r.get('nep52-client-clock'))
+        return int(self.r.get('nep52-cs-boot')) + int(self.r.get('nep52-cs-clock')) + int(self.r.get('nep52-client-boot')) + int(self.r.get('nep52-client-clock'))
 
 
     def getLastReset(self):
