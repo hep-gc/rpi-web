@@ -1,10 +1,20 @@
 #!/bin/bash
-#   current_utc_time=`date -u +'%a %b %d %Y %T'`
     current_utc_time=`date -u +'%Y-%m-%dT%TZ'`
-    redis-cli set nep52-cs-boot 0 > /dev/null
-    redis-cli set nep52-cs-clock 0 > /dev/null
-    redis-cli set nep52-cvmfs-boot 0 > /dev/null
-    redis-cli set nep52-cvmfs-clock 0 > /dev/null
-    redis-cli set nep52-client-boot 0 > /dev/null
-    redis-cli set nep52-client-clock 0 > /dev/null
-    redis-cli set nep52-reset-date "$current_utc_time" > /dev/null
+
+    if [ 'X'$1 == 'Xbatch' ]; then
+        echo 'batch'
+        redis-cli set nep52-cs-boot 0 > /dev/null
+        redis-cli set nep52-cs-clock 0 > /dev/null
+        redis-cli set nep52-client-boot 0 > /dev/null
+        redis-cli set nep52-client-clock 0 > /dev/null
+        redis-cli set nep52-reset-date "$current_utc_time" > /dev/null
+    elif [ 'X'$1 == 'Xsoftrepo' ]; then
+        echo 'softrepo'
+        redis-cli set nep52-cvmfs-boot 0 > /dev/null
+        redis-cli set nep52-cvmfs-clock 0 > /dev/null
+        redis-cli set nep52-iclient-boot 0 > /dev/null
+        redis-cli set nep52-iclient-clock 0 > /dev/null
+        redis-cli set nep52-reset2-date "$current_utc_time" > /dev/null
+    else
+        echo 'Usage: nep52-reset {batch|softrepo}'
+    fi

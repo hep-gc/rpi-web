@@ -12,7 +12,7 @@
 # Default-Start:     3 5
 # Default-Stop:      0 1 2 6
 # Short-Description: nep52-rpi statistics collector process
-# Description:       nep52-consumerconsumes and amqp queue and invokes nep52-count to record the statistics.
+# Description:       nep52-consumer consumes an amqp queue and invokes nep52-count to record the statistics.
 ### END INIT INFO
 
 EXECUTABLEPATH="/usr/local/sbin/nep52-consumer" 

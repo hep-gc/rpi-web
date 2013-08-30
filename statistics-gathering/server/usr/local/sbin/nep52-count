@@ -2,7 +2,7 @@
     declare -i count
     read line
     words=($line)
-    if [ ${words[0]} == 'cs' ] || [ ${words[0]} == 'cvmfs' ] || [ ${words[0]} == 'client' ]; then
+    if [ ${words[0]} == 'cs' ] || [ ${words[0]} == 'cvmfs' ] || [ ${words[0]} == 'client' || [ ${words[0]} == 'iclient' ]; then
         if [ ${words[1]} == 'boot' ] || [ ${words[1]} == 'clock' ]; then
             counter='nep52-'${words[0]}'-'${words[1]}
             count=`redis-cli get $counter`
