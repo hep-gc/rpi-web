@@ -173,6 +173,8 @@ class RpiService():
         d['releaseTime'] = str(self.getReleaseTime())
         d['category'] = self.getCategory()
         d['tags'] = self.getTags()
+        d['researchSubject'] = self.getResearchSubject()
+        d['supportEmail'] = self.getSupportEmail()
 
         if self._should_return_json():
             cherrypy.response.headers['Content-Type'] = "application/json"
@@ -261,6 +263,20 @@ class RpiService():
         """
         return self._processReturnValue(self.getReleaseNotes())
 
+    def researchSubject(self):
+        """
+        Return release notes describing the current version of your
+        service.
+
+        When an HTTP GET is performed, return the release notes for
+        the current version of your service. These notes should
+        identify changes made from previous versions as well as any
+        know issues with work-arounds (where applicable). If the
+        release notes are hosted elsewhere, please return an HTTP
+        redirect in response to this request.
+        """
+        return self._processReturnValue(self.getResearchSubject())
+
 
     def support(self):
         """
@@ -273,6 +289,18 @@ class RpiService():
         tracking systems and/or forums, etc.
         """
         return self._processReturnValue(self.getSupport())
+
+    def supportEmail(self):
+        """
+        Provide users with information on how to get support for your
+        RPI.
+
+        When an HTTP GET is performed, return instructions for users
+        on how to get support for your service, in human-readable
+        format. Include help desk contact info, a link to any bug
+        tracking systems and/or forums, etc.
+        """
+        return self._processReturnValue(self.getSupportEmail())
 
 
     def source(self):
@@ -376,8 +404,14 @@ class RpiService():
     def getReleaseNotes(self):
         return self._getFromConfig('release_notes', '')
 
+    def getResearchSubject(self):
+        return self._getFromConfig('researchSubject', '')
+
     def getSupport(self):
         return self._getFromConfig('support', '')
+
+    def getSupportEmail(self):
+        return self._getFromConfig('supportEmail', '')
 
     def getSource(self):
         # Defaults to 'No Content' if not implemented in subclass.
