@@ -73,6 +73,7 @@ class RpiService():
         d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
         d.connect(self.__class__.__name__ + '-licence', '/%s/service/licence' % (self._getUrlBase()), controller = self, action = 'licence')
         d.connect(self.__class__.__name__ + '-provenance', '/%s/service/provenance' % (self._getUrlBase()), controller = self, action = 'provenance')
+        logging.info('Routes connected.')
 
 
     def _getUrlBase(self):
