@@ -53,32 +53,39 @@ class RpiService():
         Call this method to register the URL routes.
         This method will register the following URIs:
         
-          <base>/service/info
-          <base>/service/stats
-          <base>/service/doc
-          <base>/service/releasenotes
-          <base>/service/support
-          <base>/service/source
-          <base>/service/tryme
-          <base>/service/licence
-          <base>/service/provenance
+          <base>/[service|platform]/info
+          <base>/[service|platform]/stats
+          <base>/[service|platform]/doc
+          <base>/[service|platform]/releasenotes
+          <base>/[service|platform]/support
+          <base>/[service|platform]/source
+          <base>/[service|platform]/tryme
+          <base>/[service|platform]/licence
+          <base>/[service|platform]/provenance
 
         """
-        d.connect(self.__class__.__name__ + '-info', '/%s/service/info' % (self._getUrlBase()), controller = self, action = 'info')
-        d.connect(self.__class__.__name__ + '-stats', '/%s/service/stats' % (self._getUrlBase()), controller = self, action = 'stats')
-        d.connect(self.__class__.__name__ + '-doc', '/%s/service/doc' % (self._getUrlBase()), controller = self, action = 'doc')
-        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/service/releasenotes' % (self._getUrlBase()), controller = self, action = 'releasenotes')
-        d.connect(self.__class__.__name__ + '-support', '/%s/service/support' % (self._getUrlBase()), controller = self, action = 'support')
-        d.connect(self.__class__.__name__ + '-source', '/%s/service/source' % (self._getUrlBase()), controller = self, action = 'source')
-        d.connect(self.__class__.__name__ + '-tryme', '/%s/service/tryme' % (self._getUrlBase()), controller = self, action = 'tryme')
-        d.connect(self.__class__.__name__ + '-licence', '/%s/service/licence' % (self._getUrlBase()), controller = self, action = 'licence')
-        d.connect(self.__class__.__name__ + '-provenance', '/%s/service/provenance' % (self._getUrlBase()), controller = self, action = 'provenance')
+        t = self._getType()
+
+        d.connect(self.__class__.__name__ + '-info', '/%s/%s/info' % (self._getUrlBase(), t), controller = self, action = 'info')
+        d.connect(self.__class__.__name__ + '-stats', '/%s/%s/stats' % (self._getUrlBase(), t), controller = self, action = 'stats')
+        d.connect(self.__class__.__name__ + '-doc', '/%s/%s/doc' % (self._getUrlBase(), t), controller = self, action = 'doc')
+        d.connect(self.__class__.__name__ + '-releasenotes', '/%s/%s/releasenotes' % (self._getUrlBase(), t), controller = self, action = 'releasenotes')
+        d.connect(self.__class__.__name__ + '-support', '/%s/%s/support' % (self._getUrlBase(), t), controller = self, action = 'support')
+        d.connect(self.__class__.__name__ + '-source', '/%s/%s/source' % (self._getUrlBase(), t), controller = self, action = 'source')
+        d.connect(self.__class__.__name__ + '-tryme', '/%s/%s/tryme' % (self._getUrlBase(), t), controller = self, action = 'tryme')
+        d.connect(self.__class__.__name__ + '-licence', '/%s/%s/licence' % (self._getUrlBase(),t ), controller = self, action = 'licence')
+        d.connect(self.__class__.__name__ + '-provenance', '/%s/%s/provenance' % (self._getUrlBase(),t ), controller = self, action = 'provenance')
+        if t == 'platform':
+            d.connect(self.__class__.__name__ + '-factsheet', '/%s/%s/factsheet' % (self._getUrlBase(),t ), controller = self, action = 'factsheet')
+
         logging.info('Routes connected.')
 
 
     def _getUrlBase(self):
         return self._getFromConfig('url_base', self.getName().lower())
 
+    def _getType(self):
+        return self._getFromConfig('type', 'service')
         
     def _getXmlRpcServer(self):
         return self._getFromConfig('xmlrpc_server')
@@ -355,7 +362,11 @@ class RpiService():
         return self._processReturnValue(self.getProvenance())
 
 
-
+    def factsheet(self):
+        """
+        TODO: Function documentation
+        """
+        return self._processReturnValue(self.getFactsheet())
 
 
 
@@ -436,4 +447,6 @@ class RpiService():
     def getProvenance(self):
         return self._getFromConfig('provenance', '')
 
+    def getFactsheet(self):
+        return self._getFromConfig('factsheet', '')
 
