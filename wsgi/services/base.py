@@ -42,11 +42,21 @@ class RpiService():
     def _getConfigSection(self):
         return self.__class__.__name__
 
+
+    def _hasConfigVariable(self, option):
+        """
+        Test if a config section (service or platform) has a specific
+        configuration variable defined.
+        """
+        return self._config.has_option(self._getConfigSection(), option)
+
+
     def _getFromConfig(self, option, default = None):
         if self._config.has_option(self._getConfigSection(), option):
             return self._config.get(self._getConfigSection(), option)
         else:
             return default
+
 
     def _connectRoutes(self, d):
         """
@@ -78,6 +88,9 @@ class RpiService():
         if t == 'platform':
             d.connect(self.__class__.__name__ + '-factsheet', '/%s/%s/factsheet' % (self._getUrlBase(),t ), controller = self, action = 'factsheet')
 
+        if self._hasConfigVariable('download'):
+            d.connect(self.__class__.__name__ + '-download', '/%s/%s/download' % (self._getUrlBase(),t ), controller = self, action = 'download')
+            
         logging.info('Routes connected.')
 
 
@@ -369,6 +382,9 @@ class RpiService():
         return self._processReturnValue(self.getFactsheet())
 
 
+    def download(self):
+        return self._processReturnValue(self.getDownload())
+
 
 
     #
@@ -449,4 +465,7 @@ class RpiService():
 
     def getFactsheet(self):
         return self._getFromConfig('factsheet', '')
+
+    def getDownload(self):
+        return self._getFromConfig('download', '')
 
