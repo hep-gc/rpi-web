@@ -12,7 +12,7 @@ from services.batch import BatchService
 from services.softrepo import SoftwareRepository
 from services.glint import GlintService
 from services.shoal import ShoalService
-from services.hdidcc import HdidccService
+from platforms.hdidcc import HdidccPlatform
 
 logger = None
 
@@ -37,7 +37,7 @@ try:
     softRepo = SoftwareRepository(d)
     glintService = GlintService(d)
     shoalService = ShoalService(d)
-    hdidccService = HdidccService(d)
+    hdidccPlatform = HdidccPlatform(d)
     
 
 
